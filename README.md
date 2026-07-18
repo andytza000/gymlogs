@@ -52,8 +52,9 @@ product quality and community word-of-mouth — not the reason the app exists.
 - Supporter one-time IAP (Play Billing)
 
 Explicitly **out of scope for v1**: accounts, cloud sync, social features, program marketplaces,
-AI coaching. Local-first Android only (Room/SQLite), which keeps running costs at zero and the
-maintenance surface small.
+AI coaching. Local-first Android only (Expo/React Native with on-device SQLite), which keeps
+running costs at zero and the maintenance surface small. See `tech-stack.md` for the full
+stack and architecture decisions.
 
 ## Long-term
 
