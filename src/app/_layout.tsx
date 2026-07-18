@@ -5,7 +5,9 @@ export default function RootLayout() {
   return (
     <>
       <StatusBar style="auto" />
-      <Stack />
+      <Stack>
+        <Stack.Screen name="index" options={{ title: 'GymLogs' }} />
+      </Stack>
     </>
   );
 }
