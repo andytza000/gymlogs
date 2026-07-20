@@ -4,8 +4,8 @@ Local-first workout logger for Android (Expo/React Native, TypeScript strict).
 RPE-based training analytics. No backend, no login, no tracking — all data on-device.
 Full rationale for every stack/architecture decision: see `tech-stack.md`.
 
-> Status: pre-scaffold. Commands and structure below describe the target state and
-> apply as soon as the scaffold lands; update this file if they drift.
+> Status: scaffold + Jest harness landed. Still pending from Step 0: Prettier
+> (lint currently = ESLint only), ESLint boundary rules, CI workflow.
 
 ## Commands
 
@@ -55,24 +55,27 @@ them away:
 
 ## Testing conventions
 
-- Test behavior at boundaries (domain functions, repository APIs, screens via
-  visible text/accessibility labels) — never internals.
-- Repository/screen tests run against **real in-memory SQLite** (better-sqlite3)
-  with the real migrations. No DB mocks.
-- Test data comes from `src/test/` factories (deterministic defaults + overrides,
-  typed off the Drizzle schema) and scenario builders that seed through real
-  repositories. Fixed base timestamp, fake timers — never `Date.now()` in tests.
-- **Mocking is closed-list:** only app-owned ports (entitlements, file-share) may
-  be faked, using the canonical fakes in `src/test/fakes.ts`. Needing a new mock
-  means proposing a new port first. Never `jest.mock()` internal modules; never
-  deep-mock third-party APIs.
-- Assert on state/visible outcomes, not on mock interactions (exception: where the
-  call is the outcome, e.g. share-sheet invocation).
-- No snapshot tests. Never run with `--updateSnapshot`.
-- No random test data except fast-check property tests in `core/domain`.
-- A flaky test is a bug: fix it, don't rerun it.
-- Domain golden tests pin outputs to published RTS RPE→%1RM chart values — if a
-  refactor changes those outputs, the refactor is wrong, not the test.
+- Full rules in `.claude/rules/testing.md` (auto-loads when working on test
+  files, `src/test/`, or the Jest config). Tests are colocated: `foo.test.ts`
+  next to `foo.ts`; never under `src/app/` (expo-router registers routes there).
+- Design-time invariant: only app-owned ports may be mocked — needing a new mock
+  means proposing a new port first. Design features accordingly.
+
+## Naming conventions
+
+- Folders: kebab-case (`design-system/`, `workout-log/`).
+- Component files: PascalCase.tsx, filename = exported component
+  (`Button.tsx` exports `Button`).
+- Hooks: `useX.ts`; all other modules camelCase.ts (`workoutRepository.ts`,
+  `tokens.ts`).
+- `src/app/` route files follow expo-router conventions (lowercase,
+  `_layout.tsx`, `[id].tsx`); default exports only there, named exports
+  everywhere else.
+- Tests: `<name>.test.ts(x)`, colocated with the file under test.
+- DB: snake_case table/column names, camelCase TS properties (Drizzle maps).
+- Types: PascalCase, no `I` prefix.
+- Windows: `core.ignorecase` stays true; never rename a file by case alone —
+  use a two-step `git mv` if ever needed.
 
 ## Product invariants
 
