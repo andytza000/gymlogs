@@ -1,6 +1,8 @@
+import { allThemes } from '@/test/renderWithTheme';
+
 import appConfig from '../../../app.json';
 
-import { type ThemeColors, themes } from './tokens';
+import { defaultThemeName, type ThemeColors, themes } from './tokens';
 
 // WCAG 2.x relative luminance and contrast ratio.
 function luminance(hex: string): number {
@@ -31,19 +33,18 @@ const readablePairs: [keyof ThemeColors, keyof ThemeColors][] = [
   ['danger', 'surface'],
 ];
 
-describe.each(['light', 'dark'] as const)('%s theme', (scheme) => {
+describe.each(allThemes.map((t) => [`${t.label} ${t.scheme}`, t] as const))('%s', (_, theme) => {
   test.each(readablePairs)('%s on %s reaches 4.5:1 contrast', (fg, bg) => {
-    const colors = themes[scheme].colors;
-    expect(contrast(colors[fg], colors[bg])).toBeGreaterThanOrEqual(4.5);
+    expect(contrast(theme.colors[fg], theme.colors[bg])).toBeGreaterThanOrEqual(4.5);
   });
 });
 
-test('the splash screen uses the theme backgrounds', () => {
+test('the splash screen uses the default theme backgrounds', () => {
   const splash = appConfig.expo.plugins.find(
     (plugin) => Array.isArray(plugin) && plugin[0] === 'expo-splash-screen',
   );
   expect(splash?.[1]).toEqual({
-    backgroundColor: themes.light.colors.background,
-    dark: { backgroundColor: themes.dark.colors.background },
+    backgroundColor: themes[defaultThemeName].light.colors.background,
+    dark: { backgroundColor: themes[defaultThemeName].dark.colors.background },
   });
 });

@@ -1,10 +1,13 @@
-import { screen } from '@testing-library/react-native';
+import { render, screen } from '@testing-library/react-native';
 
 import Index from '@/app/index';
-
-import { renderWithTheme } from './renderWithTheme';
+import { AppThemeProvider } from '@/core/design-system';
 
 test('renders the home screen', async () => {
-  await renderWithTheme(<Index />);
+  await render(
+    <AppThemeProvider>
+      <Index />
+    </AppThemeProvider>,
+  );
   expect(screen.getByText('GymLogs')).toBeOnTheScreen();
 });

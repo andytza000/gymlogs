@@ -140,6 +140,12 @@ acknowledgment windows, pending transactions, restores — are where solo projec
   are a style reference only, never a spec for layout or functionality.
 - **Dark mode** follows the phone's setting (`userInterfaceStyle: automatic` plus
   expo-system-ui); the splash screen and navigation chrome follow it too.
+- **Themes are families × schemes**: each family (Iron, Chalk, …) defines its own
+  colors for light and dark plus its shape and type; components only ever see one
+  resolved `Theme`. Chalk exists to prove switching works; which families ship as
+  Supporter themes is decided with the IAP feature. The in-app choice lives in memory
+  until a settings feature persists it. The splash screen is build-time native config,
+  so it always uses the default family.
 - **~10 primitives** (`Screen`, `Text`, `Button`, `Card`, `Input`, …): thin wrappers
   over RN built-ins reading tokens from theme context, plain `StyleSheet`.
 - **Complex components are imported, wrapped, and tokened — never hand-rolled and
