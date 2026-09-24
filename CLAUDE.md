@@ -2,7 +2,15 @@
 
 Local-first workout logger for Android (Expo/React Native, TypeScript strict).
 RPE-based training analytics. No backend, no login, no tracking — all data on-device.
-Full rationale for every stack/architecture decision: see `tech-stack.md`.
+
+## Workflow
+
+- The plan and all open work live in GitHub Issues (`gh issue list`); check them
+  before planning. PRs reference their issue (`Closes #N`).
+- Before adding a dependency or changing a stack/architecture decision, read the
+  matching `tech-stack.md` section; if the decision changes, update it in the same PR.
+- Before building or proposing a feature, check v1 scope in `README.md`;
+  out-of-scope items need the user's explicit OK.
 
 ## Commands
 

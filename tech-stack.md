@@ -66,12 +66,12 @@ generated, checked-in SQL migrations (bundled, run at app start via `useMigratio
   the same schema definitions port to a server DB if a backend ever exists.
 - SQL is the best-represented database language in AI training data.
 
-**Sync-ready guardrails (baked into the first migration, permanent):**
-- UUIDv7 primary keys on every table — never auto-increment integers.
-- `created_at` / `updated_at` on every table.
-- Soft deletes (`deleted_at`) on all user-data tables; repositories filter them out.
-- The repository layer is the only DB access path — a future sync engine slots in
-  behind it without touching features.
+**Sync-ready guardrails** (the rule list: CLAUDE.md "Schema guardrails"). UUIDv7 keys,
+timestamps and soft deletes are what any sync engine needs to merge several devices'
+data: random IDs don't collide, `updated_at` tells which change is newer, and a
+soft-deleted row can still tell other devices it was deleted. Cheap in the first
+migration, a painful data migration to retrofit. The repository layer is the only
+DB access path, so a future sync engine slots in behind it without touching features.
 
 **Alternatives considered.** WatermelonDB (great for 10k+-row reactive lists and
 built-in sync, but locks us into its model layer — our repository seam already
@@ -174,18 +174,13 @@ by speed; the fast layers catch almost everything so the slow layers stay tiny.
   workout; kill/relaunch mid-session; history + chart; CSV export; theme switch).
   Runs on merge to main / nightly — never in the per-PR loop.
 
-**Test data:** deterministic factories with overrides (`makeSet({ rpe: null })`),
-typed off Drizzle's `$inferInsert`; scenario builders seed through the real
-repositories; fixed base timestamp + fake timers; no faker-style randomness.
-fast-check is the only sanctioned randomness (shrinking + reported seed).
-Factories and fakes live in `src/test/`.
-
-**Mocking policy:** mock nothing by default. The only mockable things are the app-owned
-integrations in `core/integrations` (entitlements, file-share); one canonical fake per
-integration in `src/test/fakes.ts`.
-Never deep-mock third-party APIs; never `jest.mock()` internal modules (that's a
-missing-boundary smell); assert on state, not interactions, except where the call is
-the outcome. No snapshot tests. Zero tolerance for flake.
+**Test data and mocking** (the rules: `.claude/rules/testing.md`). Deterministic
+factories (`makeSet({ rpe: null })`) and real repositories instead of random data and
+mocks, so a failing test points at real behavior, not at a wrong assumption. Only the
+app-owned integrations in `core/integrations` may be faked; needing any other mock
+means a boundary is missing (§9). No snapshot tests: they break on harmless refactors
+and get re-approved unread. fast-check is the one sanctioned randomness because it
+shrinks failures and reports the seed.
 
 **Coverage:** per-layer thresholds, not a global number — ~95% `core/domain`,
 ~90% repositories; UI covered by meaningful flows, not percentages. Each threshold
@@ -200,19 +195,10 @@ tests).
 ## 9. Architecture: feature slices + shared core
 
 **Decision.** Vertical feature slices over a shared kernel, borrowing hexagonal
-seams without the ceremony:
-
-```
-src/app/        expo-router routes only — thin, no logic
-src/core/       shared kernel:
-                  db/            schema, migrations, repositories
-                  domain/        pure functions (RPE, e1RM, volume, CSV)
-                  design-system/ tokens, primitives, chart wrappers
-                  integrations/  entitlements, file-share (+ their adapters)
-src/features/*  one folder per feature: screens, components, hooks, store,
-                and the feature's own logic as plain modules
-src/test/       factories, scenario builders, fakes
-```
+seams without the ceremony: thin routes in `src/app`, one folder per feature in
+`src/features/*`, a shared `src/core` (db, domain, design-system, integrations),
+test infrastructure in `src/test`. The folder layout and dependency rules are in
+CLAUDE.md ("Structure", "Architecture rules"), enforced by `eslint.config.js`.
 
 `core/integrations/` is what hexagonal architecture calls ports and adapters, under
 a plain name (renamed from `ports/`, September 2026; "services" was rejected because
@@ -222,11 +208,6 @@ a single feature uses, and nothing else does — so the mockable surface stays a
 single folder (§8) and shared integrations (purchases gate themes, icons and export
 formats) never need to move. Business logic lives in the feature, or in
 `core/domain` as pure functions when shared.
-
-**Dependency rules (ESLint-enforced, not just convention):**
-- Features import from core; core never imports from features.
-- Features never import from each other — shared code graduates to core.
-- All DB access through repositories; OS edges only via integrations.
 
 **Why.** Working on a feature touches one folder; the seams (domain, repositories,
 integrations) are exactly where tests attach and where a future sync engine plugs in; lint
@@ -244,3 +225,21 @@ complete enough that green means mergeable. The bundle step catches what tsc and
 Jest can't see (Metro resolution, assets, config) in ~10s; a native Gradle build
 would take 10+ minutes and buys nothing until the app has custom native code.
 Maestro smoke suite on an Android emulator runs on main/nightly.
+
+## 11. Work tracking: GitHub Issues
+
+**Decision.** The plan and all open work live in GitHub Issues on this repo; each PR
+closes its issue (`Closes #N`). A GitHub Projects board can sit on top when a board
+view is wanted (decided September 2026).
+
+**Why.** Free with no limits, next to the code and PRs, and issues close on merge.
+Claude reads and updates them with `gh`, so every session — local, cloud, another
+machine — sees the same plan.
+
+**Alternatives considered.** Linear (nicer UI and planning features, but the free
+plan blocks new issues past 250, and it's a second tool to keep in sync); a
+`roadmap.md` in the repo (visible, but nothing closes automatically, so it drifts);
+Claude's private memory, where the plan first lived (invisible to the user and to
+other sessions).
+
+**Watch-outs.** Issues on a public repo are public.
