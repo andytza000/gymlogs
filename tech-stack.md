@@ -182,9 +182,9 @@ instead of mocks so tests exercise real SQL, not assumptions about it. Only the
 app-owned integrations in `core/integrations` may be faked; needing any other mock
 means a boundary is missing (§9). Mocks shipped by the jest-expo preset or a
 library's official Jest setup (Reanimated, Skia) don't count: native code can't run
-in Node, so they are test environment, not fakes. No snapshot tests: they break on harmless refactors
-and get re-approved unread. fast-check is the one sanctioned randomness because it
-shrinks failures and reports the seed.
+in Node, so they are test environment, not fakes. No snapshot tests: they break on
+harmless refactors and get re-approved unread. fast-check is the one sanctioned
+randomness because it shrinks failures and reports the seed.
 
 **Coverage:** per-layer thresholds, not a global number — ~95% `core/domain`,
 ~90% repositories; UI covered by meaningful flows, not percentages. Each threshold
