@@ -62,6 +62,8 @@ Files outside these folders fail lint; don't invent new top-level folders.
 - Feature UI composes design-system primitives and wrappers only — no raw
   third-party UI imports, no hardcoded colors/spacing; use semantic tokens.
   Theming is a paid product feature; the token layer must stay fully ours.
+  Style with `makeStyles((t) => …)` / `useTheme()` from `core/design-system`;
+  never read token values at module load (breaks runtime theme switching).
 
 ## Schema guardrails (permanent — bake into every migration)
 

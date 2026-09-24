@@ -134,6 +134,12 @@ acknowledgment windows, pending transactions, restores — are where solo projec
 - **Typography:** the Android system font (Roboto) for v1 — no font loading, no native
   build. Type tokens own size/weight/line-height, so a custom family later is a token
   change (decided September 2026).
+- **Look: Iron**: cool grey / near-black with a cobalt accent, small uppercase labels,
+  bold fixed-width numbers. Picked from six options in a mockup round (September 2026).
+  The values in `src/core/design-system/tokens.ts` are the source of truth; the mockups
+  are a style reference only, never a spec for layout or functionality.
+- **Dark mode** follows the phone's setting (`userInterfaceStyle: automatic` plus
+  expo-system-ui); the splash screen and navigation chrome follow it too.
 - **~10 primitives** (`Screen`, `Text`, `Button`, `Card`, `Input`, …): thin wrappers
   over RN built-ins reading tokens from theme context, plain `StyleSheet`.
 - **Complex components are imported, wrapped, and tokened — never hand-rolled and

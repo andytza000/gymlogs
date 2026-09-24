@@ -20,6 +20,9 @@ applies to it.
 
 ## Rules
 
+- Anything that uses the theme renders via `renderWithTheme(ui, { scheme })`
+  from `src/test/` (real ThemeProvider + SafeAreaProvider); test light and dark
+  with `test.each`, asserting `toHaveStyle` against `themes[scheme]` values.
 - **RNTL v14 API is async** — always `await render(...)`, `await fireEvent...`,
   `await userEvent...`. An un-awaited `render` fails later with
   "`render` function has not been called". (Most training-data examples show
