@@ -31,6 +31,7 @@ src/test/       factories, scenario builders, fakes
 ```
 
 New feature = new folder in `src/features/`, wired into `src/app/` routes.
+Files outside these folders fail lint; don't invent new top-level folders.
 
 ## Architecture rules
 
