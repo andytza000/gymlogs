@@ -14,7 +14,7 @@ module.exports = defineConfig([
     ignores: ['dist/*'],
   },
   {
-    files: ['src/**/*.{ts,tsx}'],
+    files: ['src/**/*.{js,jsx,ts,tsx}'],
     plugins: { boundaries },
     settings: {
       'boundaries/elements': [
@@ -26,6 +26,8 @@ module.exports = defineConfig([
       'boundaries/files': [{ category: 'test', pattern: '**/*.test.{ts,tsx}' }],
     },
     rules: {
+      // Every file must belong to an element above; a new top-level folder needs one first.
+      'boundaries/no-unknown-files': 'error',
       'boundaries/dependencies': [
         'error',
         {

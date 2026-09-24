@@ -12,8 +12,9 @@ building any of it now.
 
 ## 1. App framework: React Native + Expo (dev client)
 
-**Decision.** React Native (New Architecture) via Expo with a custom dev client.
-TypeScript strict everywhere.
+**Decision.** React Native (New Architecture) via Expo with a custom dev client
+(`expo-dev-client` gets added with the first native module Expo Go can't run —
+react-native-mmkv or expo-iap). TypeScript strict everywhere.
 
 **Why.**
 - Best AI-assisted development stack available: TypeScript/React dominate training data,
@@ -128,6 +129,9 @@ acknowledgment windows, pending transactions, restores — are where solo projec
 **Decision.** No UI/styling library. A thin custom design system:
 - **Semantic tokens** (typed TS): `color.surface`, `color.accent`, `spacing.md`,
   type scale — one token object per theme (light/dark now; Supporter themes later).
+- **Typography:** the Android system font (Roboto) for v1 — no font loading, no native
+  build. Type tokens own size/weight/line-height, so a custom family later is a token
+  change (decided September 2026).
 - **~10 primitives** (`Screen`, `Text`, `Button`, `Card`, `Input`, …): thin wrappers
   over RN built-ins reading tokens from theme context, plain `StyleSheet`.
 - **Complex components are imported, wrapped, and tokened — never hand-rolled and
@@ -181,10 +185,12 @@ integrations in `core/integrations` (entitlements, file-share); one canonical fa
 integration in `src/test/fakes.ts`.
 Never deep-mock third-party APIs; never `jest.mock()` internal modules (that's a
 missing-boundary smell); assert on state, not interactions, except where the call is
-the outcome. No broad snapshot tests. Zero tolerance for flake.
+the outcome. No snapshot tests. Zero tolerance for flake.
 
 **Coverage:** per-layer thresholds, not a global number — ~95% `core/domain`,
-~90% repositories; UI covered by meaningful flows, not percentages.
+~90% repositories; UI covered by meaningful flows, not percentages. Each threshold
+goes into `jest.config.js` when its layer gets its first code (Jest fails on a
+threshold path with no files).
 
 **Alternatives considered.** Detox (more powerful sync, far more setup/maintenance —
 wrong trade solo); mock-based repository tests (tests would pass against assumptions
