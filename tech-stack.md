@@ -67,10 +67,12 @@ generated, checked-in SQL migrations (bundled, run at app start via `useMigratio
 - SQL is the best-represented database language in AI training data.
 
 **Sync-ready guardrails** (the rule list: CLAUDE.md "Schema guardrails"). UUIDv7 keys,
-timestamps and soft deletes are what any sync engine needs to merge several devices'
-data: random IDs don't collide, `updated_at` tells which change is newer, and a
-soft-deleted row can still tell other devices it was deleted. Cheap in the first
-migration, a painful data migration to retrofit. The repository layer is the only
+timestamps and soft deletes are what a typical sync design needs to merge several
+devices' data: IDs created on different devices don't collide (two auto-increment
+counters would both start at 1), `updated_at` finds what changed since the last sync
+and settles last-write-wins conflicts, and a soft-deleted row stays behind so other
+devices learn it was deleted. Cheap in the first migration, a painful data migration
+to retrofit. The repository layer is the only
 DB access path, so a future sync engine slots in behind it without touching features.
 
 **Alternatives considered.** WatermelonDB (great for 10k+-row reactive lists and
@@ -175,8 +177,8 @@ by speed; the fast layers catch almost everything so the slow layers stay tiny.
   Runs on merge to main / nightly — never in the per-PR loop.
 
 **Test data and mocking** (the rules: `.claude/rules/testing.md`). Deterministic
-factories (`makeSet({ rpe: null })`) and real repositories instead of random data and
-mocks, so a failing test points at real behavior, not at a wrong assumption. Only the
+factories (`makeSet({ rpe: null })`) so every failure reproduces; real repositories
+instead of mocks so tests exercise real SQL, not assumptions about it. Only the
 app-owned integrations in `core/integrations` may be faked; needing any other mock
 means a boundary is missing (§9). No snapshot tests: they break on harmless refactors
 and get re-approved unread. fast-check is the one sanctioned randomness because it
@@ -228,18 +230,19 @@ Maestro smoke suite on an Android emulator runs on main/nightly.
 
 ## 11. Work tracking: GitHub Issues
 
-**Decision.** The plan and all open work live in GitHub Issues on this repo; each PR
-closes its issue (`Closes #N`). A GitHub Projects board can sit on top when a board
-view is wanted (decided September 2026).
+**Decision.** The plan and all open work live in GitHub Issues on this repo; a PR
+that finishes an issue closes it (`Closes #N`). A GitHub Projects board can sit on
+top when a board view is wanted (decided September 2026).
 
 **Why.** Free with no limits, next to the code and PRs, and issues close on merge.
-Claude reads and updates them with `gh`, so every session — local, cloud, another
-machine — sees the same plan.
+Claude reads and updates them through GitHub, so sessions on any machine see the
+same plan.
 
 **Alternatives considered.** Linear (nicer UI and planning features, but the free
 plan blocks new issues past 250, and it's a second tool to keep in sync); a
 `roadmap.md` in the repo (visible, but nothing closes automatically, so it drifts);
-Claude's private memory, where the plan first lived (invisible to the user and to
-other sessions).
+Claude's auto-memory, where the plan first lived (stored outside the repo on one
+machine: cloud sessions and other machines never see it, and the user doesn't
+normally read it).
 
 **Watch-outs.** Issues on a public repo are public.

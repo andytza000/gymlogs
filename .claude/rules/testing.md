@@ -33,9 +33,9 @@ applies to it.
 - Assert on state and visible outcomes, not mock interactions. Sole exception:
   where the call *is* the outcome (e.g. share-sheet invocation).
 - Test data comes from `src/test/` factories (deterministic defaults +
-  overrides, typed off the Drizzle schema) and scenario builders that seed
-  through real repositories. Fixed base timestamp, fake timers — never
-  `Date.now()` in tests.
+  overrides, typed off the Drizzle schema via `$inferInsert`) and scenario
+  builders that seed through real repositories. Fixed base timestamp, fake
+  timers — never `Date.now()` in tests.
 - No snapshot tests. Never run with `--updateSnapshot`.
 - No random test data. Sole exception: fast-check property tests in
   `core/domain` (shrinking + reported seed).

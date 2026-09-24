@@ -5,10 +5,12 @@ RPE-based training analytics. No backend, no login, no tracking — all data on-
 
 ## Workflow
 
-- The plan and all open work live in GitHub Issues (`gh issue list`); check them
-  before planning. PRs reference their issue (`Closes #N`).
-- Before adding a dependency or changing a stack/architecture decision, read the
-  matching `tech-stack.md` section; if the decision changes, update it in the same PR.
+- The plan and all open work live in GitHub Issues (`gh issue list`); check open
+  issues before choosing or planning work. A PR that finishes an issue says
+  `Closes #N`; partial work says `Refs #N`; small doc/chore PRs may have no issue.
+- Before adding a dependency, changing a stack/architecture decision, or explaining
+  why one was made, read the matching `tech-stack.md` section. Changing a decision
+  needs the user's explicit OK; then update that section in the same PR.
 - Before building or proposing a feature, check v1 scope in `README.md`;
   out-of-scope items need the user's explicit OK.
 
