@@ -135,7 +135,8 @@ acknowledgment windows, pending transactions, restores — are where solo projec
   build. Type tokens own size/weight/line-height, so a custom family later is a token
   change (decided September 2026).
 - **Look: Iron**: cool grey / near-black with a cobalt accent, small uppercase labels,
-  bold fixed-width numbers. Picked from six options in a mockup round (September 2026).
+  bold fixed-width numbers. Picked from six options in a mockup round (September 2026;
+  examples kept in `docs/design/`).
   The values in `src/core/design-system/tokens.ts` are the source of truth; the mockups
   are a style reference only, never a spec for layout or functionality.
 - **Dark mode** follows the phone's setting (`userInterfaceStyle: automatic` plus
