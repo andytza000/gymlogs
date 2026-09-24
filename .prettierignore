@@ -1,0 +1,3 @@
+# Hand-written docs; Prettier would restyle their markdown.
+*.md
+package-lock.json

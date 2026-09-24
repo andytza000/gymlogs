@@ -4,17 +4,16 @@ Local-first workout logger for Android (Expo/React Native, TypeScript strict).
 RPE-based training analytics. No backend, no login, no tracking — all data on-device.
 Full rationale for every stack/architecture decision: see `tech-stack.md`.
 
-> Status: scaffold + Jest harness landed. Still pending from Step 0: Prettier
-> (lint currently = ESLint only), ESLint boundary rules, CI workflow.
-
 ## Commands
 
 - `npm run typecheck` — `tsc --noEmit`
-- `npm run lint` — ESLint (Prettier check planned — see Status)
+- `npm run lint` — ESLint (incl. architecture boundaries) + Prettier check;
+  `npm run format` fixes formatting
 - `npm test` — Jest (unit + integration; headless, no emulator)
 
-All three must be green before any commit. CI will enforce the same set on PRs
-(planned — no CI yet, so running them locally is the only gate).
+All three must be green before any commit. CI (`.github/workflows/ci.yml`) runs
+them on every PR, plus `npm run bundle` (Metro Android bundle — catches bundling
+errors tsc misses; run it locally when touching imports, assets, or config).
 Maestro E2E runs on main/nightly only — never part of the local/PR loop.
 
 ## Structure
@@ -37,15 +36,16 @@ New feature = new folder in `src/features/`, wired into `src/app/` routes.
 
 - Dependencies point one way: features → core. Features never import each other;
   code needed by two features graduates to core. Core never imports features.
-  (ESLint boundary rules planned — until they land, check imports by hand;
-  once added, do not weaken them.)
+  Only tests import `src/test`. (ESLint-enforced in `eslint.config.js` — do not
+  weaken those rules.)
 - **All DB access goes through `core/db` repositories.** Never query SQLite from
   features. The repository layer is where a future sync engine plugs in.
 - OS and store APIs (purchases, file share) are used only through
   `core/integrations`: one app-owned interface per integration, plus one adapter
   wrapping the real library. The expo-iap adapter is the only file that touches
   the store APIs. Every integration lives there, even one only a single feature
-  uses, and nothing else does.
+  uses, and nothing else does. A new integration or DB library goes on
+  `INTEGRATION_LIBRARIES` / `DB_LIBRARIES` in `eslint.config.js`.
 - Business logic lives in the feature that uses it, or in `core/domain` as pure
   functions once shared. Data access stays in `core/db` repositories.
 - Feature UI composes design-system primitives and wrappers only — no raw
