@@ -10,10 +10,11 @@ Full rationale for every stack/architecture decision: see `tech-stack.md`.
 ## Commands
 
 - `npm run typecheck` — `tsc --noEmit`
-- `npm run lint` — ESLint + Prettier check
+- `npm run lint` — ESLint (Prettier check planned — see Status)
 - `npm test` — Jest (unit + integration; headless, no emulator)
 
-All three must be green before any commit. This is the same set CI enforces on PRs.
+All three must be green before any commit. CI will enforce the same set on PRs
+(planned — no CI yet, so running them locally is the only gate).
 Maestro E2E runs on main/nightly only — never part of the local/PR loop.
 
 ## Structure
@@ -33,7 +34,8 @@ New feature = new folder in `src/features/`, wired into `src/app/` routes.
 
 - Dependencies point one way: features → core. Features never import each other;
   code needed by two features graduates to core. Core never imports features.
-  (ESLint-enforced — do not weaken those lint rules.)
+  (ESLint boundary rules planned — until they land, check imports by hand;
+  once added, do not weaken them.)
 - **All DB access goes through `core/db` repositories.** Never query SQLite from
   features. The repository layer is where a future sync engine plugs in.
 - OS edges (purchases, file share) are used only via their `core/ports` interfaces.
@@ -55,9 +57,9 @@ them away:
 
 ## Testing conventions
 
-- Full rules in `.claude/rules/testing.md` (auto-loads when working on test
-  files, `src/test/`, or the Jest config). Tests are colocated: `foo.test.ts`
-  next to `foo.ts`; never under `src/app/` (expo-router registers routes there).
+- Test rules live in `.claude/rules/testing.md`. They load automatically when an
+  existing test is read, but not when a new test file is created, so read that
+  file before writing a new test.
 - Design-time invariant: only app-owned ports may be mocked — needing a new mock
   means proposing a new port first. Design features accordingly.
 

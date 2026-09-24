@@ -49,3 +49,6 @@ applies to it.
 - Never put `*.test.*` under `src/app/` — expo-router registers every file
   there as a route. Route files are thin; their screens live in
   `src/features/*` and are tested there.
+- Temporary exception: `src/test/smoke.test.tsx` renders the placeholder route
+  directly because no feature screen exists yet. Delete it once the first
+  feature screen has its own test; don't copy its pattern.
