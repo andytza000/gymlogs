@@ -12,9 +12,8 @@ building any of it now.
 
 ## 1. App framework: React Native + Expo (dev client)
 
-**Decision.** React Native (New Architecture) via Expo with a custom dev client
-(`expo-dev-client` gets added with the first native module Expo Go can't run —
-react-native-mmkv or expo-iap). TypeScript strict everywhere.
+**Decision.** React Native (New Architecture) via Expo with a custom dev client.
+TypeScript strict everywhere.
 
 **Why.**
 - Best AI-assisted development stack available: TypeScript/React dominate training data,
@@ -130,23 +129,12 @@ acknowledgment windows, pending transactions, restores — are where solo projec
 
 **Decision.** No UI/styling library. A thin custom design system:
 - **Semantic tokens** (typed TS): `color.surface`, `color.accent`, `spacing.md`,
-  type scale — one token object per theme (light/dark now; Supporter themes later).
+  type scale — one token set per theme family (Iron, Chalk, …), each with light and
+  dark palettes plus its own shape and type; dark follows the phone's setting.
 - **Typography:** the Android system font (Roboto) for v1 — no font loading, no native
-  build. Type tokens own size/weight/line-height, so a custom family later is a token
-  change (decided September 2026).
-- **Look: Iron**: cool grey / near-black with a cobalt accent, small uppercase labels,
-  bold fixed-width numbers. Picked from six options in a mockup round (September 2026;
-  examples kept in `docs/design/`).
-  The values in `src/core/design-system/tokens.ts` are the source of truth; the mockups
-  are a style reference only, never a spec for layout or functionality.
-- **Dark mode** follows the phone's setting (`userInterfaceStyle: automatic` plus
-  expo-system-ui); the splash screen and navigation chrome follow it too.
-- **Themes are families × schemes**: each family (Iron, Chalk, …) defines its own
-  colors for light and dark plus its shape and type; components only ever see one
-  resolved `Theme`. Chalk exists to prove switching works; which families ship as
-  Supporter themes is decided with the IAP feature. The in-app choice lives in memory
-  until a settings feature persists it. The splash screen is build-time native config,
-  so it always uses the default family.
+  build; a custom family later is a token change.
+- **Look:** Iron, picked in a mockup round (September 2026). The examples in
+  `docs/design/` are style references, not layout specs.
 - **~10 primitives** (`Screen`, `Text`, `Button`, `Card`, `Input`, …): thin wrappers
   over RN built-ins reading tokens from theme context, plain `StyleSheet`.
 - **Complex components are imported, wrapped, and tokened — never hand-rolled and
@@ -200,9 +188,7 @@ harmless refactors and get re-approved unread. fast-check is the one sanctioned
 randomness because it shrinks failures and reports the seed.
 
 **Coverage:** per-layer thresholds, not a global number — ~95% `core/domain`,
-~90% repositories; UI covered by meaningful flows, not percentages. Each threshold
-goes into `jest.config.js` when its layer gets its first code (Jest fails on a
-threshold path with no files).
+~90% repositories; UI covered by meaningful flows, not percentages.
 
 **Alternatives considered.** Detox (more powerful sync, far more setup/maintenance —
 wrong trade solo); mock-based repository tests (tests would pass against assumptions
@@ -255,9 +241,6 @@ same plan.
 
 **Alternatives considered.** Linear (nicer UI and planning features, but the free
 plan blocks new issues past 250, and it's a second tool to keep in sync); a
-`roadmap.md` in the repo (visible, but nothing closes automatically, so it drifts);
-Claude's auto-memory, where the plan first lived (stored outside the repo on one
-machine: cloud sessions and other machines never see it, and the user doesn't
-normally read it).
+`roadmap.md` in the repo (visible, but nothing closes automatically, so it drifts).
 
 **Watch-outs.** Issues on a public repo are public.

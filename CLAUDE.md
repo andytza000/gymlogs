@@ -13,6 +13,11 @@ RPE-based training analytics. No backend, no login, no tracking — all data on-
   needs the user's explicit OK; then update that section in the same PR.
 - Before building or proposing a feature, check v1 scope in `README.md`;
   out-of-scope items need the user's explicit OK.
+- `tech-stack.md` holds decisions only: the choice, why, alternatives rejected —
+  a few lines each. No implementation details, status or timing ("until…",
+  "added later"); those belong in code or issues.
+- `README.md` is product-level only; change it only when the product changes,
+  with the user's OK.
 
 ## Commands
 
