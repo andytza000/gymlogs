@@ -26,10 +26,10 @@ applies to it.
   the old sync API; this project uses v14.)
 - Repository and screen tests run against **real in-memory SQLite**
   (better-sqlite3) with the real checked-in migrations. No DB mocks, ever.
-- **Mocking is closed-list:** only the services in `core/services`
+- **Mocking is closed-list:** only the integrations in `core/integrations`
   (entitlements, file-share) may be faked, using the canonical fakes in
   `src/test/fakes.ts`. Never `jest.mock()` internal modules; never deep-mock
-  third-party APIs. Needing a new mock means proposing a new service first.
+  third-party APIs. Needing a new mock means proposing a new integration first.
 - Assert on state and visible outcomes, not mock interactions. Sole exception:
   where the call *is* the outcome (e.g. share-sheet invocation).
 - Test data comes from `src/test/` factories (deterministic defaults +

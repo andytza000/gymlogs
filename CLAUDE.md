@@ -25,8 +25,9 @@ src/core/       shared kernel:
   db/             schema, migrations, repositories
   domain/         pure functions (RPE, e1RM, volume, CSV)
   design-system/  tokens, primitives, chart wrappers
-  services/       wrappers for OS and store APIs (purchases, file share)
-src/features/*  one folder per feature: screens, components, hooks, store
+  integrations/   wrappers for OS and store APIs (purchases, file share)
+src/features/*  one folder per feature: screens, components, hooks, store,
+                and the feature's own logic as plain modules
 src/test/       factories, scenario builders, fakes
 ```
 
@@ -40,11 +41,13 @@ New feature = new folder in `src/features/`, wired into `src/app/` routes.
   once added, do not weaken them.)
 - **All DB access goes through `core/db` repositories.** Never query SQLite from
   features. The repository layer is where a future sync engine plugs in.
-- OS and store APIs (purchases, file share) are used only through `core/services`:
-  one app-owned interface per service, plus one adapter wrapping the real library.
-  The expo-iap adapter is the only file that touches the store APIs. Nothing else
-  goes in `services/` — business logic belongs in `core/domain`, data access in
-  `core/db` — and there are no feature-level services.
+- OS and store APIs (purchases, file share) are used only through
+  `core/integrations`: one app-owned interface per integration, plus one adapter
+  wrapping the real library. The expo-iap adapter is the only file that touches
+  the store APIs. Every integration lives there, even one only a single feature
+  uses, and nothing else does.
+- Business logic lives in the feature that uses it, or in `core/domain` as pure
+  functions once shared. Data access stays in `core/db` repositories.
 - Feature UI composes design-system primitives and wrappers only — no raw
   third-party UI imports, no hardcoded colors/spacing; use semantic tokens.
   Theming is a paid product feature; the token layer must stay fully ours.
@@ -65,8 +68,8 @@ them away:
 - Test rules live in `.claude/rules/testing.md`. They load automatically when an
   existing test is read, but not when a new test file is created, so read that
   file before writing a new test.
-- Design-time invariant: only `core/services` may be mocked — needing a new mock
-  means proposing a new service first. Design features accordingly.
+- Design-time invariant: only `core/integrations` may be mocked — needing a new
+  mock means proposing a new integration first. Design features accordingly.
 
 ## Naming conventions
 
