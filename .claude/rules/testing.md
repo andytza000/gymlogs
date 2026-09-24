@@ -30,12 +30,16 @@ applies to it.
   (entitlements, file-share) may be faked, using the canonical fakes in
   `src/test/fakes.ts`. Never `jest.mock()` internal modules; never deep-mock
   third-party APIs. Needing a new mock means proposing a new integration first.
+  - The closed list covers mocks we write. Mocks shipped by the jest-expo
+    preset or by a library's official Jest setup (e.g. Reanimated, Skia) are
+    test environment and allowed — wire them once in the Jest config and its
+    setup files, never per test.
 - Assert on state and visible outcomes, not mock interactions. Sole exception:
   where the call *is* the outcome (e.g. share-sheet invocation).
 - Test data comes from `src/test/` factories (deterministic defaults +
-  overrides, typed off the Drizzle schema) and scenario builders that seed
-  through real repositories. Fixed base timestamp, fake timers — never
-  `Date.now()` in tests.
+  overrides, typed off the Drizzle schema via `$inferInsert`) and scenario
+  builders that seed through real repositories. Fixed base timestamp, fake
+  timers — never `Date.now()` in tests.
 - No snapshot tests. Never run with `--updateSnapshot`.
 - No random test data. Sole exception: fast-check property tests in
   `core/domain` (shrinking + reported seed).
