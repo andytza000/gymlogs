@@ -232,6 +232,9 @@ calls — ceremony a 5-feature app can't pay for).
 
 ## 10. CI
 
-GitHub Actions on every PR: typecheck + lint + Jest (layers 0–2), targeted as required
-checks — fast enough for the AI's inner loop, complete enough that green means
-mergeable. Maestro smoke suite on an Android emulator runs on main/nightly.
+GitHub Actions on every PR: typecheck + lint + Jest (layers 0–2) + a Metro Android
+bundle (`expo export`), as one required check — fast enough for the AI's inner loop,
+complete enough that green means mergeable. The bundle step catches what tsc and
+Jest can't see (Metro resolution, assets, config) in ~10s; a native Gradle build
+would take 10+ minutes and buys nothing until the app has custom native code.
+Maestro smoke suite on an Android emulator runs on main/nightly.
