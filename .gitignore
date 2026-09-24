@@ -25,6 +25,7 @@ expo-env.d.ts
 npm-debug.*
 yarn-debug.*
 yarn-error.*
+*.log
 
 # macOS
 .DS_Store
@@ -35,6 +36,9 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+# Claude Code personal settings
+.claude/settings.local.json
 
 # generated native folders
 /ios
