@@ -112,9 +112,9 @@ rolling Play Billing version deadlines (v8+ mandatory for updates from Aug 2026 
 an archived library is a compliance dead end); Expo Module, so zero manual native
 config; StoreKit 2 support keeps the iOS door open.
 
-**Architecture rule.** All purchase logic sits behind an app-owned `EntitlementPort`
+**Architecture rule.** All purchase logic sits behind an app-owned `EntitlementService`
 (is-supporter check, purchase, restore) with one thin expo-iap adapter. Features and
-tests only ever see the port. Client-side entitlement is proportionate protection for
+tests only ever see the service interface. Client-side entitlement is proportionate protection for
 a cosmetic thank-you unlock; no backend, no receipt server.
 
 **Alternatives considered.** RevenueCat (subscription machinery we don't need, ~1% fee,
@@ -175,8 +175,9 @@ repositories; fixed base timestamp + fake timers; no faker-style randomness.
 fast-check is the only sanctioned randomness (shrinking + reported seed).
 Factories and fakes live in `src/test/`.
 
-**Mocking policy:** mock nothing by default. The only mockable things are app-owned
-ports (entitlements, file-share); one canonical fake per port in `src/test/fakes.ts`.
+**Mocking policy:** mock nothing by default. The only mockable things are the app-owned
+services in `core/services` (entitlements, file-share); one canonical fake per service
+in `src/test/fakes.ts`.
 Never deep-mock third-party APIs; never `jest.mock()` internal modules (that's a
 missing-boundary smell); assert on state, not interactions, except where the call is
 the outcome. No broad snapshot tests. Zero tolerance for flake.
@@ -200,18 +201,25 @@ src/core/       shared kernel:
                   db/            schema, migrations, repositories
                   domain/        pure functions (RPE, e1RM, volume, CSV)
                   design-system/ tokens, primitives, chart wrappers
-                  ports/         entitlements, file-share (+ their adapters)
+                  services/      entitlements, file-share (+ their adapters)
 src/features/*  one folder per feature: screens, components, hooks, store
 src/test/       factories, scenario builders, fakes
 ```
 
+`core/services/` is what hexagonal architecture calls ports and adapters, under a
+more familiar name (renamed from `ports/`, September 2026): one app-owned interface
+per OS or store API, plus one adapter wrapping the real library. It holds nothing
+else — no business logic, no feature-level services — so the mockable surface stays
+a single folder (§8), and services used by several features (purchases gate themes,
+icons and export formats) never need to move.
+
 **Dependency rules (ESLint-enforced, not just convention):**
 - Features import from core; core never imports from features.
 - Features never import from each other — shared code graduates to core.
-- All DB access through repositories; OS edges only via ports.
+- All DB access through repositories; OS edges only via services.
 
 **Why.** Working on a feature touches one folder; the seams (domain, repositories,
-ports) are exactly where tests attach and where a future sync engine plugs in; lint
+services) are exactly where tests attach and where a future sync engine plugs in; lint
 enforcement makes the structure self-defending against both human and AI shortcuts.
 
 **Alternatives considered.** Layer-based folders (features smear across the tree,
