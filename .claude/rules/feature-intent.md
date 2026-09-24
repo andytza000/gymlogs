@@ -1,8 +1,6 @@
 # Feature intent
 
-Each `src/features/<name>/` holds a `CLAUDE.md` with that feature's intent. It
-loads automatically when files in that folder are read, so it only costs tokens
-while working on that feature.
+Each `src/features/<name>/` holds a `CLAUDE.md` with that feature's intent.
 
 - New feature: write it before any code, from the user's own words. Ask only
   about gaps that would change what gets built; never invent intent.
