@@ -30,6 +30,10 @@ applies to it.
   (entitlements, file-share) may be faked, using the canonical fakes in
   `src/test/fakes.ts`. Never `jest.mock()` internal modules; never deep-mock
   third-party APIs. Needing a new mock means proposing a new integration first.
+  - The closed list covers mocks we write. Mocks shipped by the jest-expo
+    preset or by a library's official Jest setup (e.g. Reanimated, Skia) are
+    test environment and allowed — wire them once in the Jest config and its
+    setup files, never per test.
 - Assert on state and visible outcomes, not mock interactions. Sole exception:
   where the call *is* the outcome (e.g. share-sheet invocation).
 - Test data comes from `src/test/` factories (deterministic defaults +
