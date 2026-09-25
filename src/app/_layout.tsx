@@ -1,13 +1,13 @@
 import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
+
+import { SystemThemeProvider } from '@/core/design-system';
 
 export default function RootLayout() {
   return (
-    <>
-      <StatusBar style="auto" />
+    <SystemThemeProvider>
       <Stack>
         <Stack.Screen name="index" options={{ title: 'GymLogs' }} />
       </Stack>
-    </>
+    </SystemThemeProvider>
   );
 }

@@ -3,9 +3,10 @@ const prettierConfig = require('eslint-config-prettier/flat');
 const boundaries = require('eslint-plugin-boundaries');
 const { defineConfig } = require('eslint/config');
 
-// Libraries only core/db (plus src/test) or core/integrations may import.
+// Libraries only core/db (plus src/test), core/integrations or core/design-system may import.
 const DB_LIBRARIES = ['expo-sqlite', 'drizzle-orm', 'better-sqlite3'];
 const INTEGRATION_LIBRARIES = ['expo-iap'];
+const UI_LIBRARIES = ['expo-status-bar', 'expo-system-ui'];
 
 module.exports = defineConfig([
   expoConfig,
@@ -26,6 +27,8 @@ module.exports = defineConfig([
       'boundaries/files': [{ category: 'test', pattern: '**/*.test.{ts,tsx}' }],
     },
     rules: {
+      // A nudge to check separation of concerns, not a limit to split by.
+      'max-lines': ['warn', { max: 200, skipBlankLines: true, skipComments: true }],
       // Every file must belong to an element above; a new top-level folder needs one first.
       'boundaries/no-unknown-files': 'error',
       'boundaries/dependencies': [
@@ -82,6 +85,14 @@ module.exports = defineConfig([
             {
               from: { element: { type: 'core', captured: { module: 'integrations' } } },
               allow: { to: { module: { origin: 'external', source: INTEGRATION_LIBRARIES } } },
+            },
+            {
+              disallow: { to: { module: { origin: 'external', source: UI_LIBRARIES } } },
+              message: 'Only core/design-system may import {{to.module.source}}.',
+            },
+            {
+              from: { element: { type: 'core', captured: { module: 'design-system' } } },
+              allow: { to: { module: { origin: 'external', source: UI_LIBRARIES } } },
             },
           ],
         },

@@ -13,6 +13,11 @@ RPE-based training analytics. No backend, no login, no tracking — all data on-
   needs the user's explicit OK; then update that section in the same PR.
 - Before building or proposing a feature, check v1 scope in `README.md`;
   out-of-scope items need the user's explicit OK.
+- `tech-stack.md` holds decisions only: the choice, why, alternatives rejected —
+  a few lines each. No implementation details, status or timing ("until…",
+  "added later"); those belong in code or issues.
+- `README.md` is product-level only; change it only when the product changes,
+  with the user's OK.
 
 ## Commands
 
@@ -34,7 +39,7 @@ src/core/       shared kernel:
   db/             schema, migrations, repositories
   domain/         pure functions (RPE, e1RM, volume, CSV)
   design-system/  tokens, primitives, chart wrappers
-  integrations/   wrappers for OS and store APIs (purchases, file share)
+  integrations/   wrappers for APIs that reach outside the app (purchases, file share)
 src/features/*  one folder per feature: screens, components, hooks, store,
                 and the feature's own logic as plain modules
 src/test/       factories, scenario builders, fakes
@@ -51,17 +56,19 @@ Files outside these folders fail lint; don't invent new top-level folders.
   weaken those rules.)
 - **All DB access goes through `core/db` repositories.** Never query SQLite from
   features. The repository layer is where a future sync engine plugs in.
-- OS and store APIs (purchases, file share) are used only through
+- APIs that reach outside the app (purchases, file share) are used only through
   `core/integrations`: one app-owned interface per integration, plus one adapter
   wrapping the real library. The expo-iap adapter is the only file that touches
   the store APIs. Every integration lives there, even one only a single feature
-  uses, and nothing else does. A new integration or DB library goes on
-  `INTEGRATION_LIBRARIES` / `DB_LIBRARIES` in `eslint.config.js`.
+  uses, and nothing else does. A new integration, DB or UI library goes on
+  `INTEGRATION_LIBRARIES` / `DB_LIBRARIES` / `UI_LIBRARIES` in `eslint.config.js`.
 - Business logic lives in the feature that uses it, or in `core/domain` as pure
   functions once shared. Data access stays in `core/db` repositories.
 - Feature UI composes design-system primitives and wrappers only — no raw
   third-party UI imports, no hardcoded colors/spacing; use semantic tokens.
   Theming is a paid product feature; the token layer must stay fully ours.
+  Style with `makeStyles((t) => …)` / `useTheme()` from `core/design-system`;
+  never read token values at module load (breaks runtime theme switching).
 
 ## Schema guardrails (permanent — bake into every migration)
 
@@ -82,13 +89,28 @@ them away:
 - Design-time invariant: only `core/integrations` may be mocked — needing a new
   mock means proposing a new integration first. Design features accordingly.
 
+## Code style
+
+- Separation of concerns: each file, component and function has one
+  responsibility. Split files by concern, not by length.
+- No duplication: extract shared logic as soon as it repeats. Code that only
+  looks alike but changes for different reasons is not duplication.
+- Code explains itself through names and structure. Comment only the why it
+  can't show (a workaround, edge case, platform quirk, or a constraint that
+  forces an unusual approach), never what something is for; rename instead.
+
 ## Naming conventions
 
+- Every name says exactly what the thing is or does, as briefly as clarity
+  allows. Never name it after the caller or feature that uses it (a flag:
+  `inTransaction`, not `isCsvImport`). Applies to every name, from folders and
+  files to union members, object keys, DB columns and test titles. A concept
+  keeps the same name everywhere, docs included.
 - Folders: kebab-case (`design-system/`, `workout-log/`).
 - Component files: PascalCase.tsx, filename = exported component
   (`Button.tsx` exports `Button`).
 - Hooks: `useX.ts`; all other modules camelCase.ts (`workoutRepository.ts`,
-  `tokens.ts`).
+  `themes.ts`).
 - `src/app/` route files follow expo-router conventions (lowercase,
   `_layout.tsx`, `[id].tsx`); default exports only there, named exports
   everywhere else.

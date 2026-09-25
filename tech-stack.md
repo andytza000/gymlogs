@@ -12,9 +12,11 @@ building any of it now.
 
 ## 1. App framework: React Native + Expo (dev client)
 
-**Decision.** React Native (New Architecture) via Expo with a custom dev client
-(`expo-dev-client` gets added with the first native module Expo Go can't run —
-react-native-mmkv or expo-iap). TypeScript strict everywhere.
+**Decision.** React Native (New Architecture) via Expo with a custom dev client.
+TypeScript strict everywhere. Native modules that only other packages import
+(react-native-worklets, react-native-reanimated) are still direct dependencies,
+added with `npx expo install`: `expo install --check` skips transitive ones, and a
+JS/native version mismatch crashes the app on launch.
 
 **Why.**
 - Best AI-assisted development stack available: TypeScript/React dominate training data,
@@ -129,11 +131,13 @@ acknowledgment windows, pending transactions, restores — are where solo projec
 ## 7. Design system: custom tokens + primitives; Victory Native for charts
 
 **Decision.** No UI/styling library. A thin custom design system:
-- **Semantic tokens** (typed TS): `color.surface`, `color.accent`, `spacing.md`,
-  type scale — one token object per theme (light/dark now; Supporter themes later).
+- **Semantic tokens** (typed TS): `colors.surface`, `colors.accent`, `spacing.md`,
+  type scale — one token set per theme family (Iron, Chalk, …), each with light and
+  dark colors plus its own shape and type; dark follows the phone's setting.
 - **Typography:** the Android system font (Roboto) for v1 — no font loading, no native
-  build. Type tokens own size/weight/line-height, so a custom family later is a token
-  change (decided September 2026).
+  build; switching to a custom font is a token change.
+- **Look:** Iron, picked in a mockup round (September 2026). The examples in
+  `docs/design/` are style references, not layout specs.
 - **~10 primitives** (`Screen`, `Text`, `Button`, `Card`, `Input`, …): thin wrappers
   over RN built-ins reading tokens from theme context, plain `StyleSheet`.
 - **Complex components are imported, wrapped, and tokened — never hand-rolled and
@@ -141,7 +145,7 @@ acknowledgment windows, pending transactions, restores — are where solo projec
   components (`TrendChart`, `WeeklyBarChart`); `@gorhom/bottom-sheet` when needed.
   Feature code composes only design-system components.
 
-**Why.** Theming is the *product's paid feature* (Supporter palettes) — the token
+**Why.** Theming is the *product's paid feature* (Supporter theme families) — the token
 architecture must be fully ours, not a library's abstraction. The app needs ~10
 primitives and zero complex widgets besides charts. A closed, typed vocabulary is
 the best AI target: the whole system fits in context, every usage is typechecked,
@@ -187,9 +191,7 @@ harmless refactors and get re-approved unread. fast-check is the one sanctioned
 randomness because it shrinks failures and reports the seed.
 
 **Coverage:** per-layer thresholds, not a global number — ~95% `core/domain`,
-~90% repositories; UI covered by meaningful flows, not percentages. Each threshold
-goes into `jest.config.js` when its layer gets its first code (Jest fails on a
-threshold path with no files).
+~90% repositories; UI covered by meaningful flows, not percentages.
 
 **Alternatives considered.** Detox (more powerful sync, far more setup/maintenance —
 wrong trade solo); mock-based repository tests (tests would pass against assumptions
@@ -205,12 +207,12 @@ test infrastructure in `src/test`. The folder layout and dependency rules are in
 CLAUDE.md ("Structure", "Architecture rules"), enforced by `eslint.config.js`.
 
 `core/integrations/` is what hexagonal architecture calls ports and adapters, under
-a plain name (renamed from `ports/`, September 2026; "services" was rejected because
-it usually means business logic): one app-owned interface per OS or store API, plus
-one adapter wrapping the real library. Every integration lives there, even one only
-a single feature uses, and nothing else does — so the mockable surface stays a
-single folder (§8) and shared integrations (purchases gate themes, icons and export
-formats) never need to move. Business logic lives in the feature, or in
+a plain name instead of `ports/` ("services" was rejected because it usually means
+business logic): one app-owned interface per API that reaches outside the app, plus
+one adapter wrapping the real library. Every integration lives there,
+even one only a single feature uses, and nothing else does — so the mockable surface
+stays a single folder (§8) and shared integrations (purchases gate themes, icons and
+export formats) never need to move. Business logic lives in the feature, or in
 `core/domain` as pure functions when shared.
 
 **Why.** Working on a feature touches one folder; the seams (domain, repositories,
@@ -242,9 +244,6 @@ same plan.
 
 **Alternatives considered.** Linear (nicer UI and planning features, but the free
 plan blocks new issues past 250, and it's a second tool to keep in sync); a
-`roadmap.md` in the repo (visible, but nothing closes automatically, so it drifts);
-Claude's auto-memory, where the plan first lived (stored outside the repo on one
-machine: cloud sessions and other machines never see it, and the user doesn't
-normally read it).
+`roadmap.md` in the repo (visible, but nothing closes automatically, so it drifts).
 
 **Watch-outs.** Issues on a public repo are public.
