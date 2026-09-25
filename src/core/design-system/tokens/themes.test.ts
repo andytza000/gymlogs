@@ -40,7 +40,7 @@ const readablePairs: [keyof ThemeColors, keyof ThemeColors][] = [
   ['danger', 'surface'],
 ];
 
-describe.each(allThemes)('$label $scheme', (theme) => {
+describe.each(allThemes)('$familyLabel $scheme', (theme) => {
   test.each(readablePairs)('%s on %s reaches 4.5:1 contrast', (foreground, background) => {
     expect(
       contrastRatio(theme.colors[foreground], theme.colors[background]),

@@ -1,10 +1,10 @@
 import { Pressable, Text, View } from 'react-native';
 
-import { makeStyles, themeFamilies, useThemeChoice } from '@/core/design-system';
+import { makeStyles, themeFamilies, useThemeFamily } from '@/core/design-system';
 
 export default function Index() {
   const styles = useStyles();
-  const { familyName, setFamilyName } = useThemeChoice();
+  const { familyName, setFamilyName } = useThemeFamily();
   return (
     <View style={styles.container}>
       <Text style={styles.title}>GymLogs</Text>

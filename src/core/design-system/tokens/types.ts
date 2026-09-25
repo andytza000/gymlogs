@@ -1,6 +1,6 @@
 import type { TextStyle } from 'react-native';
 
-import type { sharedScales } from './sharedScales';
+import type { sharedTokens } from './sharedTokens';
 
 export type ColorScheme = 'light' | 'dark';
 
@@ -34,11 +34,13 @@ export type ThemeFamily = {
   label: string;
   radius: { control: number; card: number };
   typography: Record<TextVariant, TextVariantStyle>;
-  palettes: Record<ColorScheme, ThemeColors>;
+  colors: Record<ColorScheme, ThemeColors>;
 };
 
-export type Theme = Omit<ThemeFamily, 'palettes'> &
-  typeof sharedScales & {
+export type Theme = Omit<ThemeFamily, 'name' | 'label' | 'colors'> &
+  typeof sharedTokens & {
+    familyName: ThemeFamilyName;
+    familyLabel: string;
     scheme: ColorScheme;
     colors: ThemeColors;
   };

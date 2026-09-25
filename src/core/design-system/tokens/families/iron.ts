@@ -18,7 +18,7 @@ export const iron: ThemeFamily = {
       textTransform: 'uppercase',
     },
   },
-  palettes: {
+  colors: {
     light: {
       background: '#F2F4F7',
       surface: '#FFFFFF',

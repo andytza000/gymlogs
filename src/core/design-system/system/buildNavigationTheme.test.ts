@@ -2,7 +2,7 @@ import { allThemes } from '@/test/allThemes';
 
 import { buildNavigationTheme } from './buildNavigationTheme';
 
-test.each(allThemes)('$label $scheme navigation chrome uses the theme colors', (theme) => {
+test.each(allThemes)('$familyLabel $scheme navigation chrome uses the theme colors', (theme) => {
   expect(buildNavigationTheme(theme)).toMatchObject({
     dark: theme.scheme === 'dark',
     colors: {

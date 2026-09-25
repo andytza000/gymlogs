@@ -8,7 +8,7 @@ type Props = {
   children: ReactNode;
 };
 
-export function AppThemeProvider({ children }: Props) {
+export function SystemThemeProvider({ children }: Props) {
   const scheme = useColorScheme() === 'dark' ? 'dark' : 'light';
   return (
     <ThemeProvider scheme={scheme}>

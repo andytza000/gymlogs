@@ -12,7 +12,7 @@ export const chalk: ThemeFamily = {
     bodySmall: { fontSize: 13, lineHeight: 18, fontWeight: '400' },
     label: { fontSize: 12, lineHeight: 16, fontWeight: '500', letterSpacing: 0.24 },
   },
-  palettes: {
+  colors: {
     light: {
       background: '#F6F3EE',
       surface: '#FFFFFF',

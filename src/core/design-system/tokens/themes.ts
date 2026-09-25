@@ -1,12 +1,19 @@
 import { chalk } from './families/chalk';
 import { iron } from './families/iron';
-import { sharedScales } from './sharedScales';
+import { sharedTokens } from './sharedTokens';
 import type { ColorScheme, Theme, ThemeFamily, ThemeFamilyName } from './types';
 
 const families: Record<ThemeFamilyName, ThemeFamily> = { iron, chalk };
 
-function buildTheme({ palettes, ...family }: ThemeFamily, scheme: ColorScheme): Theme {
-  return { ...family, ...sharedScales, scheme, colors: palettes[scheme] };
+function buildTheme({ name, label, colors, ...family }: ThemeFamily, scheme: ColorScheme): Theme {
+  return {
+    ...family,
+    ...sharedTokens,
+    familyName: name,
+    familyLabel: label,
+    scheme,
+    colors: colors[scheme],
+  };
 }
 
 function buildThemes(family: ThemeFamily): Record<ColorScheme, Theme> {

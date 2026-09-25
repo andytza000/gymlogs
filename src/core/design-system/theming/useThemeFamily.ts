@@ -1,6 +1,6 @@
 import { useThemeContext } from './useThemeContext';
 
-export function useThemeChoice() {
+export function useThemeFamily() {
   const { theme, setFamilyName } = useThemeContext();
-  return { familyName: theme.name, setFamilyName };
+  return { familyName: theme.familyName, setFamilyName };
 }

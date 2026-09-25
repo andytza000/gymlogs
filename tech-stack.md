@@ -128,11 +128,11 @@ acknowledgment windows, pending transactions, restores — are where solo projec
 ## 7. Design system: custom tokens + primitives; Victory Native for charts
 
 **Decision.** No UI/styling library. A thin custom design system:
-- **Semantic tokens** (typed TS): `color.surface`, `color.accent`, `spacing.md`,
+- **Semantic tokens** (typed TS): `colors.surface`, `colors.accent`, `spacing.md`,
   type scale — one token set per theme family (Iron, Chalk, …), each with light and
-  dark palettes plus its own shape and type; dark follows the phone's setting.
+  dark colors plus its own shape and type; dark follows the phone's setting.
 - **Typography:** the Android system font (Roboto) for v1 — no font loading, no native
-  build; a custom family later is a token change.
+  build; a custom font later is a token change.
 - **Look:** Iron, picked in a mockup round (September 2026). The examples in
   `docs/design/` are style references, not layout specs.
 - **~10 primitives** (`Screen`, `Text`, `Button`, `Card`, `Input`, …): thin wrappers
@@ -142,7 +142,7 @@ acknowledgment windows, pending transactions, restores — are where solo projec
   components (`TrendChart`, `WeeklyBarChart`); `@gorhom/bottom-sheet` when needed.
   Feature code composes only design-system components.
 
-**Why.** Theming is the *product's paid feature* (Supporter palettes) — the token
+**Why.** Theming is the *product's paid feature* (Supporter theme families) — the token
 architecture must be fully ours, not a library's abstraction. The app needs ~10
 primitives and zero complex widgets besides charts. A closed, typed vocabulary is
 the best AI target: the whole system fits in context, every usage is typechecked,

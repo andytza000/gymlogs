@@ -3,22 +3,22 @@ import { Text } from 'react-native';
 
 import { useTheme } from '../theming/useTheme';
 import { defaultFamilyName } from '../tokens/themes';
-import { AppThemeProvider } from './AppThemeProvider';
+import { SystemThemeProvider } from './SystemThemeProvider';
 
 function ThemeSummary() {
   const theme = useTheme();
   return (
     <Text>
-      {theme.name} {theme.scheme}
+      {theme.familyName} {theme.scheme}
     </Text>
   );
 }
 
 test('renders the default family in light when the phone sets no scheme', async () => {
   await render(
-    <AppThemeProvider>
+    <SystemThemeProvider>
       <ThemeSummary />
-    </AppThemeProvider>,
+    </SystemThemeProvider>,
   );
   expect(screen.getByText(`${defaultFamilyName} light`)).toBeOnTheScreen();
 });

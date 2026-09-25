@@ -23,7 +23,7 @@ applies to it.
 - Anything that uses the theme renders via
   `renderWithTheme(ui, { familyName, scheme })` from `src/test/` (real
   ThemeProvider + SafeAreaProvider). Cover every theme with
-  `test.each(allThemes)('… $label $scheme …')` (`src/test/allThemes.ts`),
+  `test.each(allThemes)('… $familyLabel $scheme …')` (`src/test/allThemes.ts`),
   asserting `toHaveStyle` against that theme's token values — never hardcoded
   values.
 - **RNTL v14 API is async** — always `await render(...)`, `await fireEvent...`,
