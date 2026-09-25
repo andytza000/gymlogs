@@ -101,9 +101,10 @@ them away:
 
 ## Naming conventions
 
-- Every name says exactly what the thing is or does. Clarity comes first:
-  keep a name as short as possible, and make it longer only when that is
-  needed for it to be clear. Applies to folders, files, types, union members,
+- Every name says exactly what the thing is or does. Never name it after the
+  caller or feature that uses it (a flag: `inTransaction`, not `isCsvImport`).
+  Clarity comes first: keep a name as short as possible, and make it longer
+  only when that is needed for it to be clear. Applies to folders, files, types, union members,
   components, hooks, functions, variables, constants, parameters, props,
   object keys, DB tables and columns, test titles. A concept keeps the same
   name everywhere, docs included.
