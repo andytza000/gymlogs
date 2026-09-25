@@ -5,25 +5,24 @@ import type { ColorScheme, Theme, ThemeFamily, ThemeFamilyName } from './types';
 
 const families: Record<ThemeFamilyName, ThemeFamily> = { iron, chalk };
 
-function buildTheme({ name, label, colors, ...family }: ThemeFamily, scheme: ColorScheme): Theme {
+function buildTheme(family: ThemeFamily, scheme: ColorScheme): Theme {
   return {
-    ...family,
     ...sharedTokens,
-    familyName: name,
-    familyLabel: label,
+    familyName: family.name,
     scheme,
-    colors: colors[scheme],
+    colors: family.colors[scheme],
+    radius: family.radius,
+    typography: family.typography,
   };
-}
-
-function buildThemes(family: ThemeFamily): Record<ColorScheme, Theme> {
-  return { light: buildTheme(family, 'light'), dark: buildTheme(family, 'dark') };
 }
 
 export const themeFamilies = Object.values(families);
 
 export const themes = Object.fromEntries(
-  themeFamilies.map((family) => [family.name, buildThemes(family)]),
+  themeFamilies.map((family) => [
+    family.name,
+    { light: buildTheme(family, 'light'), dark: buildTheme(family, 'dark') },
+  ]),
 ) as Record<ThemeFamilyName, Record<ColorScheme, Theme>>;
 
 export const defaultFamilyName: ThemeFamilyName = 'iron';

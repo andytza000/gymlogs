@@ -1,10 +1,11 @@
-import { DarkTheme, DefaultTheme, type Theme as NavigationTheme } from 'expo-router';
+import { DefaultTheme, type Theme as NavigationTheme } from 'expo-router';
 
 import type { Theme } from '../tokens/types';
 
 export function buildNavigationTheme(theme: Theme): NavigationTheme {
   return {
-    ...(theme.scheme === 'dark' ? DarkTheme : DefaultTheme),
+    dark: theme.scheme === 'dark',
+    fonts: DefaultTheme.fonts,
     colors: {
       primary: theme.colors.accent,
       background: theme.colors.background,

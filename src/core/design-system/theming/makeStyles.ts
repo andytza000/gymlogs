@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 
-import { useTheme } from './theming/useTheme';
-import type { Theme } from './tokens/types';
+import type { Theme } from '../tokens/types';
+import { useTheme } from './useTheme';
 
 // Styles are built from the active theme when used, never at module load,
 // so switching themes at runtime restyles everything.

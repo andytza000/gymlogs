@@ -4,8 +4,8 @@ import { Pressable, Text, View } from 'react-native';
 import { allThemes } from '@/test/allThemes';
 import { renderWithTheme } from '@/test/renderWithTheme';
 
-import { makeStyles } from '../makeStyles';
 import { defaultFamilyName, themeFamilies } from '../tokens/themes';
+import { makeStyles } from './makeStyles';
 import { useThemeFamily } from './useThemeFamily';
 
 const defaultFamilyThemes = allThemes.filter((theme) => theme.familyName === defaultFamilyName);
@@ -21,9 +21,9 @@ function FamilyPicker() {
   return (
     <View accessibilityLabel="Themed surface" style={styles.surface}>
       <Text>Active: {familyName}</Text>
-      {themeFamilies.map(({ name, label }) => (
+      {themeFamilies.map(({ name }) => (
         <Pressable key={name} accessibilityRole="button" onPress={() => setFamilyName(name)}>
-          <Text>Use {label}</Text>
+          <Text>Use {name}</Text>
         </Pressable>
       ))}
     </View>
@@ -31,7 +31,7 @@ function FamilyPicker() {
 }
 
 test.each(defaultFamilyThemes)(
-  'starts on the default family, $familyLabel $scheme',
+  'starts on the default family, $familyName $scheme',
   async (theme) => {
     await renderWithTheme(<FamilyPicker />, { scheme: theme.scheme });
     expect(screen.getByText(`Active: ${theme.familyName}`)).toBeOnTheScreen();
@@ -43,10 +43,10 @@ test.each(defaultFamilyThemes)(
 );
 
 test.each(otherFamilyThemes)(
-  'switching to $familyLabel $scheme restyles everything below the provider',
+  'switching to $familyName $scheme restyles everything below the provider',
   async (theme) => {
     await renderWithTheme(<FamilyPicker />, { scheme: theme.scheme });
-    await fireEvent.press(screen.getByRole('button', { name: `Use ${theme.familyLabel}` }));
+    await fireEvent.press(screen.getByRole('button', { name: `Use ${theme.familyName}` }));
     expect(screen.getByText(`Active: ${theme.familyName}`)).toBeOnTheScreen();
     expect(screen.getByLabelText('Themed surface')).toHaveStyle({
       backgroundColor: theme.colors.surface,

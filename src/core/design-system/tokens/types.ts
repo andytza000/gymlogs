@@ -23,7 +23,7 @@ export type ThemeColors = {
 
 export type TextVariant = 'display' | 'title' | 'heading' | 'body' | 'bodySmall' | 'label';
 
-// No fontFamily: every family uses Roboto, the Android system font.
+// No fontFamily: every theme uses Roboto, the Android system font.
 export type TextVariantStyle = Pick<
   TextStyle,
   'fontSize' | 'lineHeight' | 'fontWeight' | 'letterSpacing' | 'textTransform'
@@ -31,16 +31,16 @@ export type TextVariantStyle = Pick<
 
 export type ThemeFamily = {
   name: ThemeFamilyName;
-  label: string;
+  displayName: string;
   radius: { control: number; card: number };
   typography: Record<TextVariant, TextVariantStyle>;
   colors: Record<ColorScheme, ThemeColors>;
 };
 
-export type Theme = Omit<ThemeFamily, 'name' | 'label' | 'colors'> &
-  typeof sharedTokens & {
-    familyName: ThemeFamilyName;
-    familyLabel: string;
-    scheme: ColorScheme;
-    colors: ThemeColors;
-  };
+export type Theme = typeof sharedTokens & {
+  familyName: ThemeFamilyName;
+  scheme: ColorScheme;
+  colors: ThemeColors;
+  radius: ThemeFamily['radius'];
+  typography: ThemeFamily['typography'];
+};

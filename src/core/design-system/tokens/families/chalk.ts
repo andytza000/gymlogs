@@ -2,7 +2,7 @@ import type { ThemeFamily } from '../types';
 
 export const chalk: ThemeFamily = {
   name: 'chalk',
-  label: 'Chalk',
+  displayName: 'Chalk',
   radius: { control: 12, card: 16 },
   typography: {
     display: { fontSize: 44, lineHeight: 48, fontWeight: '500' },

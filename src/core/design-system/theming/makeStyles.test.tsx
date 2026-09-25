@@ -15,7 +15,7 @@ function Box() {
   return <View accessibilityLabel="Styled box" style={styles.box} />;
 }
 
-test.each(allThemes)('styles follow the $familyLabel $scheme theme', async (theme) => {
+test.each(allThemes)('styles follow the $familyName $scheme theme', async (theme) => {
   await renderWithTheme(<Box />, { familyName: theme.familyName, scheme: theme.scheme });
   expect(screen.getByLabelText('Styled box')).toHaveStyle({
     backgroundColor: theme.colors.surface,

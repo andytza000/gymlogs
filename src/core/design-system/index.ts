@@ -1,4 +1,4 @@
-export { makeStyles } from './makeStyles';
+export { makeStyles } from './theming/makeStyles';
 export { SystemThemeProvider } from './system/SystemThemeProvider';
 export { ThemeProvider } from './theming/ThemeProvider';
 export { useTheme } from './theming/useTheme';

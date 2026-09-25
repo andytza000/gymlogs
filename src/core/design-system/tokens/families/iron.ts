@@ -2,7 +2,7 @@ import type { ThemeFamily } from '../types';
 
 export const iron: ThemeFamily = {
   name: 'iron',
-  label: 'Iron',
+  displayName: 'Iron',
   radius: { control: 4, card: 6 },
   typography: {
     display: { fontSize: 48, lineHeight: 52, fontWeight: '700' },

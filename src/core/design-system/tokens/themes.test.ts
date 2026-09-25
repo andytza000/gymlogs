@@ -5,7 +5,7 @@ import appConfig from '../../../../app.json';
 import { defaultFamilyName, themes } from './themes';
 import type { ThemeColors } from './types';
 
-function hexToRgb(hex: string): [number, number, number] {
+function hexToChannels(hex: string): [number, number, number] {
   const channel = (offset: number) => parseInt(hex.slice(offset, offset + 2), 16) / 255;
   return [channel(1), channel(3), channel(5)];
 }
@@ -16,7 +16,7 @@ function linearize(channel: number): number {
 }
 
 function relativeLuminance(hex: string): number {
-  const [red, green, blue] = hexToRgb(hex);
+  const [red, green, blue] = hexToChannels(hex);
   return 0.2126 * linearize(red) + 0.7152 * linearize(green) + 0.0722 * linearize(blue);
 }
 
@@ -40,7 +40,7 @@ const readablePairs: [keyof ThemeColors, keyof ThemeColors][] = [
   ['danger', 'surface'],
 ];
 
-describe.each(allThemes)('$familyLabel $scheme', (theme) => {
+describe.each(allThemes)('$familyName $scheme', (theme) => {
   test.each(readablePairs)('%s on %s reaches 4.5:1 contrast', (foreground, background) => {
     expect(
       contrastRatio(theme.colors[foreground], theme.colors[background]),

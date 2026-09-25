@@ -9,7 +9,7 @@ export default function Index() {
     <View style={styles.container}>
       <Text style={styles.title}>GymLogs</Text>
       <View style={styles.familyOptions}>
-        {themeFamilies.map(({ name, label }) => {
+        {themeFamilies.map(({ name, displayName }) => {
           const selected = name === familyName;
           return (
             <Pressable
@@ -22,7 +22,7 @@ export default function Index() {
               <Text
                 style={[styles.familyOptionLabel, selected && styles.familyOptionLabelSelected]}
               >
-                {label}
+                {displayName}
               </Text>
             </Pressable>
           );
@@ -53,7 +53,7 @@ const useStyles = makeStyles((t) => ({
     justifyContent: 'center',
     paddingHorizontal: t.spacing.xl,
     borderRadius: t.radius.control,
-    borderWidth: t.borderWidth.hairline,
+    borderWidth: t.borderWidth.default,
     borderColor: t.colors.border,
     backgroundColor: t.colors.surface,
   },
