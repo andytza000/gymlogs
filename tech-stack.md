@@ -205,11 +205,11 @@ CLAUDE.md ("Structure", "Architecture rules"), enforced by `eslint.config.js`.
 
 `core/integrations/` is what hexagonal architecture calls ports and adapters, under
 a plain name (renamed from `ports/`, September 2026; "services" was rejected because
-it usually means business logic): one app-owned interface per OS or store API, plus
-one adapter wrapping the real library. Every integration lives there, even one only
-a single feature uses, and nothing else does — so the mockable surface stays a
-single folder (§8) and shared integrations (purchases gate themes, icons and export
-formats) never need to move. Business logic lives in the feature, or in
+it usually means business logic): one app-owned interface per API that reaches outside
+the app, plus one adapter wrapping the real library. Every integration lives there,
+even one only a single feature uses, and nothing else does — so the mockable surface
+stays a single folder (§8) and shared integrations (purchases gate themes, icons and
+export formats) never need to move. Business logic lives in the feature, or in
 `core/domain` as pure functions when shared.
 
 **Why.** Working on a feature touches one folder; the seams (domain, repositories,

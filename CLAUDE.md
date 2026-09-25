@@ -39,7 +39,7 @@ src/core/       shared kernel:
   db/             schema, migrations, repositories
   domain/         pure functions (RPE, e1RM, volume, CSV)
   design-system/  tokens, primitives, chart wrappers
-  integrations/   wrappers for OS and store APIs (purchases, file share)
+  integrations/   wrappers for APIs that reach outside the app (purchases, file share)
 src/features/*  one folder per feature: screens, components, hooks, store,
                 and the feature's own logic as plain modules
 src/test/       factories, scenario builders, fakes
@@ -56,12 +56,12 @@ Files outside these folders fail lint; don't invent new top-level folders.
   weaken those rules.)
 - **All DB access goes through `core/db` repositories.** Never query SQLite from
   features. The repository layer is where a future sync engine plugs in.
-- OS and store APIs (purchases, file share) are used only through
+- APIs that reach outside the app (purchases, file share) are used only through
   `core/integrations`: one app-owned interface per integration, plus one adapter
   wrapping the real library. The expo-iap adapter is the only file that touches
   the store APIs. Every integration lives there, even one only a single feature
-  uses, and nothing else does. A new integration or DB library goes on
-  `INTEGRATION_LIBRARIES` / `DB_LIBRARIES` in `eslint.config.js`.
+  uses, and nothing else does. A new integration, DB or UI library goes on
+  `INTEGRATION_LIBRARIES` / `DB_LIBRARIES` / `UI_LIBRARIES` in `eslint.config.js`.
 - Business logic lives in the feature that uses it, or in `core/domain` as pure
   functions once shared. Data access stays in `core/db` repositories.
 - Feature UI composes design-system primitives and wrappers only — no raw
