@@ -13,7 +13,10 @@ building any of it now.
 ## 1. App framework: React Native + Expo (dev client)
 
 **Decision.** React Native (New Architecture) via Expo with a custom dev client.
-TypeScript strict everywhere.
+TypeScript strict everywhere. Native modules that only other packages import
+(react-native-worklets, react-native-reanimated) are still direct dependencies,
+added with `npx expo install`: `expo install --check` skips transitive ones, and a
+JS/native version mismatch crashes the app on launch.
 
 **Why.**
 - Best AI-assisted development stack available: TypeScript/React dominate training data,
@@ -132,7 +135,7 @@ acknowledgment windows, pending transactions, restores — are where solo projec
   type scale — one token set per theme family (Iron, Chalk, …), each with light and
   dark colors plus its own shape and type; dark follows the phone's setting.
 - **Typography:** the Android system font (Roboto) for v1 — no font loading, no native
-  build; a custom font later is a token change.
+  build; switching to a custom font is a token change.
 - **Look:** Iron, picked in a mockup round (September 2026). The examples in
   `docs/design/` are style references, not layout specs.
 - **~10 primitives** (`Screen`, `Text`, `Button`, `Card`, `Input`, …): thin wrappers
@@ -204,9 +207,9 @@ test infrastructure in `src/test`. The folder layout and dependency rules are in
 CLAUDE.md ("Structure", "Architecture rules"), enforced by `eslint.config.js`.
 
 `core/integrations/` is what hexagonal architecture calls ports and adapters, under
-a plain name (renamed from `ports/`, September 2026; "services" was rejected because
-it usually means business logic): one app-owned interface per API that reaches outside
-the app, plus one adapter wrapping the real library. Every integration lives there,
+a plain name instead of `ports/` ("services" was rejected because it usually means
+business logic): one app-owned interface per API that reaches outside the app, plus
+one adapter wrapping the real library. Every integration lives there,
 even one only a single feature uses, and nothing else does — so the mockable surface
 stays a single folder (§8) and shared integrations (purchases gate themes, icons and
 export formats) never need to move. Business logic lives in the feature, or in
