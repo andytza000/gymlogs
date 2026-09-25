@@ -7,8 +7,8 @@ built, not taken from these pictures.
 
 | Image | Look | Status |
 |---|---|---|
-| `iron.png` | Iron (option B) | Chosen: the default theme in `src/core/design-system/tokens.ts` |
-| `chalk.png` | Chalk (option A) | Also a theme in `tokens.ts` |
+| `iron.png` | Iron (option B) | Chosen: the default theme, `src/core/design-system/tokens/families/iron.ts` |
+| `chalk.png` | Chalk (option A) | Also a theme, `tokens/families/chalk.ts` |
 | `plate.png` | Plate (option C) | Example only, not implemented |
 
 Each image shows a logging screen and a progress screen, in light and dark.

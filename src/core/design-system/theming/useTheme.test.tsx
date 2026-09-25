@@ -9,7 +9,7 @@ function SchemeName() {
   return <Text>{useTheme().scheme}</Text>;
 }
 
-test('returns the theme given to ThemeProvider', async () => {
+test('returns the theme for the scheme given to ThemeProvider', async () => {
   await renderWithTheme(<SchemeName />, { scheme: 'dark' });
   expect(screen.getByText('dark')).toBeOnTheScreen();
 });

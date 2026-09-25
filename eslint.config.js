@@ -26,6 +26,8 @@ module.exports = defineConfig([
       'boundaries/files': [{ category: 'test', pattern: '**/*.test.{ts,tsx}' }],
     },
     rules: {
+      // A nudge to check separation of concerns, not a limit to split by.
+      'max-lines': ['warn', { max: 200, skipBlankLines: true, skipComments: true }],
       // Every file must belong to an element above; a new top-level folder needs one first.
       'boundaries/no-unknown-files': 'error',
       'boundaries/dependencies': [

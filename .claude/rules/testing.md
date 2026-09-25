@@ -20,10 +20,12 @@ applies to it.
 
 ## Rules
 
-- Anything that uses the theme renders via `renderWithTheme(ui, { name, scheme })`
-  from `src/test/` (real ThemeProvider + SafeAreaProvider). Cover every theme
-  with `test.each(allThemes…)` from the same file, asserting `toHaveStyle`
-  against that theme's token values — never hardcoded colors.
+- Anything that uses the theme renders via
+  `renderWithTheme(ui, { familyName, scheme })` from `src/test/` (real
+  ThemeProvider + SafeAreaProvider). Cover every theme with
+  `test.each(allThemes)('… $label $scheme …')` (`src/test/allThemes.ts`),
+  asserting `toHaveStyle` against that theme's token values — never hardcoded
+  values.
 - **RNTL v14 API is async** — always `await render(...)`, `await fireEvent...`,
   `await userEvent...`. An un-awaited `render` fails later with
   "`render` function has not been called". (Most training-data examples show

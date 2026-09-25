@@ -1,17 +1,21 @@
-import { useMemo } from 'react';
 import { StyleSheet } from 'react-native';
 
-import type { Theme } from './tokens';
-import { useTheme } from './useTheme';
+import { useTheme } from './theming/useTheme';
+import type { Theme } from './tokens/types';
 
 // Styles are built from the active theme when used, never at module load,
 // so switching themes at runtime restyles everything.
-//   const useStyles = makeStyles((t) => ({ card: { backgroundColor: t.colors.surface } }));
 export function makeStyles<T extends StyleSheet.NamedStyles<T>>(
-  factory: (theme: Theme) => T,
+  buildStyles: (theme: Theme) => T,
 ): () => T {
+  const stylesByTheme = new WeakMap<Theme, T>();
   return function useStyles() {
     const theme = useTheme();
-    return useMemo(() => StyleSheet.create(factory(theme)), [theme]);
+    let styles = stylesByTheme.get(theme);
+    if (!styles) {
+      styles = StyleSheet.create(buildStyles(theme));
+      stylesByTheme.set(theme, styles);
+    }
+    return styles;
   };
 }

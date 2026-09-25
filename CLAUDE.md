@@ -89,13 +89,29 @@ them away:
 - Design-time invariant: only `core/integrations` may be mocked — needing a new
   mock means proposing a new integration first. Design features accordingly.
 
+## Code style
+
+- Separation of concerns: each file, component and function has one
+  responsibility. Split files by concern, not by length.
+- No duplication: extract shared logic as soon as it repeats. Code that only
+  looks alike but changes for different reasons is not duplication.
+- Code explains itself through names and structure. Comment only the why it
+  can't show (a workaround, edge case, platform quirk, or a constraint that
+  forces an unusual approach), never what something is for; rename instead.
+
 ## Naming conventions
 
+- Every name says exactly what the thing is or does. Clarity comes first:
+  keep a name as short as possible, and make it longer only when that is
+  needed for it to be clear. Applies to folders, files, types, union members,
+  components, hooks, functions, variables, constants, parameters, props,
+  object keys, DB tables and columns, test titles. A concept keeps the same
+  name everywhere, docs included.
 - Folders: kebab-case (`design-system/`, `workout-log/`).
 - Component files: PascalCase.tsx, filename = exported component
   (`Button.tsx` exports `Button`).
 - Hooks: `useX.ts`; all other modules camelCase.ts (`workoutRepository.ts`,
-  `tokens.ts`).
+  `themes.ts`).
 - `src/app/` route files follow expo-router conventions (lowercase,
   `_layout.tsx`, `[id].tsx`); default exports only there, named exports
   everywhere else.

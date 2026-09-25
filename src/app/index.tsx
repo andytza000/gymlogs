@@ -1,28 +1,28 @@
 import { Pressable, Text, View } from 'react-native';
 
-import { makeStyles, themeNames, themes, useThemeChoice } from '@/core/design-system';
+import { makeStyles, themeFamilies, useThemeChoice } from '@/core/design-system';
 
-// Placeholder with a temporary theme switcher, until the component gallery (#8)
-// replaces it.
 export default function Index() {
   const styles = useStyles();
-  const { name, setName } = useThemeChoice();
+  const { familyName, setFamilyName } = useThemeChoice();
   return (
     <View style={styles.container}>
       <Text style={styles.title}>GymLogs</Text>
-      <View style={styles.row}>
-        {themeNames.map((option) => {
-          const selected = option === name;
+      <View style={styles.familyOptions}>
+        {themeFamilies.map(({ name, label }) => {
+          const selected = name === familyName;
           return (
             <Pressable
-              key={option}
+              key={name}
               accessibilityRole="button"
               accessibilityState={{ selected }}
-              onPress={() => setName(option)}
-              style={[styles.choice, selected && styles.choiceSelected]}
+              onPress={() => setFamilyName(name)}
+              style={[styles.familyOption, selected && styles.familyOptionSelected]}
             >
-              <Text style={[styles.choiceText, selected && styles.choiceTextSelected]}>
-                {themes[option].light.label}
+              <Text
+                style={[styles.familyOptionLabel, selected && styles.familyOptionLabelSelected]}
+              >
+                {label}
               </Text>
             </Pressable>
           );
@@ -44,12 +44,12 @@ const useStyles = makeStyles((t) => ({
     ...t.typography.title,
     color: t.colors.text,
   },
-  row: {
+  familyOptions: {
     flexDirection: 'row',
     gap: t.spacing.sm,
   },
-  choice: {
-    minHeight: t.size.hitTarget,
+  familyOption: {
+    minHeight: t.size.minTouchTarget,
     justifyContent: 'center',
     paddingHorizontal: t.spacing.xl,
     borderRadius: t.radius.control,
@@ -57,15 +57,15 @@ const useStyles = makeStyles((t) => ({
     borderColor: t.colors.border,
     backgroundColor: t.colors.surface,
   },
-  choiceSelected: {
+  familyOptionSelected: {
     borderColor: t.colors.accent,
     backgroundColor: t.colors.accent,
   },
-  choiceText: {
+  familyOptionLabel: {
     ...t.typography.heading,
     color: t.colors.text,
   },
-  choiceTextSelected: {
+  familyOptionLabelSelected: {
     color: t.colors.onAccent,
   },
 }));
